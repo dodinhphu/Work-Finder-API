@@ -1,14 +1,16 @@
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './schemas/user.schema';
+import { User, UserDocument } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const saltOrRounds = 10;
@@ -43,7 +45,7 @@ export class UsersService {
   }
 
   async remove(email: string) {
-    const result = await this.userModel.deleteOne({
+    const result = await this.userModel.softDelete({
       email: email,
     });
     return result;
