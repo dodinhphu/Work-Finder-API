@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { IUser } from 'src/users/users.interface';
 
 @Injectable()
 export class AuthService {
@@ -19,15 +19,20 @@ export class AuthService {
     return isValPass ? user : null;
   }
 
-  async compareToken(user: CreateUserDto) {
+  async compareToken(user: IUser) {
     const payload = {
+      sub: 'Token Login',
+      iss: 'From Server',
+      _id: user._id,
       email: user.email,
       name: user.name,
       address: user.address,
       age: user.age,
+      role: user.role,
     };
     return {
       access_token: this.jwtService.sign(payload),
+      ...payload,
     };
   }
 }
