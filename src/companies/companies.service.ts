@@ -52,7 +52,21 @@ export class CompaniesService {
     return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: string, userInfo: IUser) {
+    await this.companyModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        deletedBy: {
+          _id: userInfo._id,
+          email: userInfo.email,
+        },
+      },
+    );
+    const result = await this.companyModel.softDelete({
+      _id: id,
+    });
+    return result;
   }
 }
