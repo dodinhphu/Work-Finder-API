@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { IS_PUBLIC_KEY } from './constant.metadata';
+import { IS_PUBLIC_KEY } from '../decorator/customize';
 
 @Injectable()
 export class LocalAuthGuard extends AuthGuard('local') {}
