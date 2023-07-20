@@ -10,3 +10,8 @@ export const User = createParamDecorator(
     return request.user;
   },
 );
+
+// Create metadata
+export const RESPONE_MESSAGE_KEY = 'RESPONE_MESSAGE_KEY';
+export const ResponeMessage = (message: string) =>
+  SetMetadata(RESPONE_MESSAGE_KEY, message);
