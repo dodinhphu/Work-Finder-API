@@ -1,3 +1,4 @@
+import { RegisterUserDto } from './../users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
@@ -12,7 +13,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findUser(username);
     if (!user) return null;
 
     const isValPass = await bcrypt.compare(pass, user.password);
@@ -33,6 +34,14 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
       ...payload,
+    };
+  }
+
+  async register(registerUserDto: RegisterUserDto) {
+    const user = await this.usersService.register(registerUserDto);
+    return {
+      _id: user._id,
+      createdAt: user.createdAt,
     };
   }
 }

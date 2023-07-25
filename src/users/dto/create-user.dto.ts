@@ -13,8 +13,7 @@ class Company {
   _id: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  name: string;
 }
 
 export class CreateUserDto {
