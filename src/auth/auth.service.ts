@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { IUser } from 'src/users/users.interface';
-import ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +46,7 @@ export class AuthService {
   createRefreshToken(payload: object) {
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-      expiresIn: ms(this.configService.get<string>('REFRESH_TIME_OUT_TOKEN')),
+      expiresIn: this.configService.get<string>('REFRESH_TIME_OUT_TOKEN'),
     });
     return refreshToken;
   }

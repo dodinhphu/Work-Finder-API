@@ -7,7 +7,6 @@ import { LocalStrategy } from './passport/local.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthController } from './auth.controller';
-import ms from 'ms';
 
 @Module({
   imports: [
@@ -18,7 +17,7 @@ import ms from 'ms';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('TOKEN_SECRET'),
         signOptions: {
-          expiresIn: ms(configService.get<string>('TIME_OUT_TOKEN')),
+          expiresIn: configService.get<string>('TIME_OUT_TOKEN'),
         },
       }),
       inject: [ConfigService],
