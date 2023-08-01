@@ -150,4 +150,15 @@ export class UsersService {
     });
     return user;
   }
+
+  async updateRefreshToken(refreshToken: string, email: string) {
+    await this.userModel.updateOne(
+      {
+        email: email,
+      },
+      {
+        refreshToken: refreshToken || '',
+      },
+    );
+  }
 }

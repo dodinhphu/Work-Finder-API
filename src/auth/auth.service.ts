@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { IUser } from 'src/users/users.interface';
+import { Response } from 'express';
+import ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,7 @@ export class AuthService {
     return isValPass ? user : null;
   }
 
-  async compareToken(user: IUser) {
+  async compareToken(user: IUser, res: Response) {
     const payload = {
       sub: 'Token Login',
       iss: 'From Server',
@@ -34,9 +36,15 @@ export class AuthService {
       role: user.role,
     };
     const refreshToken = this.createRefreshToken(payload);
+    // Update token in DB
+    this.usersService.updateRefreshToken(refreshToken, user.email);
+    // Set Cookies
+    res.cookie('refreshToke', refreshToken, {
+      httpOnly: true,
+      maxAge: ms(this.configService.get<string>('REFRESH_TIME_OUT_TOKEN')),
+    });
     return {
       access_token: this.jwtService.sign(payload),
-      refresh_token: refreshToken,
       user: {
         ...payload,
       },
