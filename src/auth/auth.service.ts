@@ -97,4 +97,10 @@ export class AuthService {
       throw new BadRequestException('Refresh token đã hết hạn !!!');
     }
   }
+
+  async logout(respone: Response, user: IUser) {
+    await this.usersService.updateRefreshToken('', user.email);
+    respone.clearCookie('refresh_token');
+    return { status: 'ok' };
+  }
 }
