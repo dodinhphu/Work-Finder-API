@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { RegisterUserDto } from './../users/dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { IUser } from 'src/users/users.interface';
@@ -24,7 +24,7 @@ export class AuthService {
     return isValPass ? user : null;
   }
 
-  async compareToken(user: IUser, res: Response) {
+  async login(user: IUser, res: Response) {
     const payload = {
       sub: 'Token Login',
       iss: 'From Server',
@@ -39,7 +39,7 @@ export class AuthService {
     // Update token in DB
     this.usersService.updateRefreshToken(refreshToken, user.email);
     // Set Cookies
-    res.cookie('refreshToke', refreshToken, {
+    res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       maxAge: ms(this.configService.get<string>('REFRESH_TIME_OUT_TOKEN')),
     });
@@ -65,5 +65,36 @@ export class AuthService {
       _id: user._id,
       createdAt: user.createdAt,
     };
+  }
+
+  async handleRefreshToken(refreshToken: string) {
+    try {
+      this.jwtService.verify(refreshToken, {
+        secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+      });
+      const user = await this.usersService.getUserByRefreshToken(refreshToken);
+      if (user) {
+        const payload = {
+          sub: 'Token Login',
+          iss: 'From Server',
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          address: user.address,
+          age: user.age,
+          role: user.role,
+        };
+        return {
+          access_token: this.jwtService.sign(payload),
+          user: {
+            ...payload,
+          },
+        };
+      } else {
+        throw new BadRequestException('Refresh token không đúng !!!');
+      }
+    } catch (error) {
+      throw new BadRequestException('Refresh token đã hết hạn !!!');
+    }
   }
 }

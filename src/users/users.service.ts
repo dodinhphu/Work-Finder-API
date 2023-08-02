@@ -161,4 +161,11 @@ export class UsersService {
       },
     );
   }
+
+  async getUserByRefreshToken(refreshToken: string) {
+    const user: IUser = await this.userModel.findOne({
+      refreshToken: refreshToken,
+    });
+    return user;
+  }
 }

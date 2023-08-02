@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
 import { Public, ResponeMessage } from '../decorator/customize';
 import { LocalAuthGuard } from './constant.guard';
 import { RegisterUserDto } from 'src/users/dto/create-user.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IUser } from 'src/users/users.interface';
 
 @Controller('auth')
@@ -23,7 +23,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req, @Res({ passthrough: true }) res: Response) {
-    return this.authService.compareToken(req.user, res);
+    return this.authService.login(req.user, res);
   }
 
   @Public()
@@ -37,5 +37,13 @@ export class AuthController {
   @Get('account')
   async getUserInfo(@User() user: IUser) {
     return { user };
+  }
+
+  @Public()
+  @ResponeMessage('Refresh token')
+  @Get('refresh')
+  async handleRefreshToken(@Req() request: Request) {
+    const refreshToken = request.cookies['refresh_token'] || '';
+    return this.authService.handleRefreshToken(refreshToken);
   }
 }
