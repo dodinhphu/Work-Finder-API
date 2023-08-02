@@ -59,8 +59,8 @@ export class UsersService {
 
   async findAll(page: number, limit: number, qs: string) {
     const { filter, projection, population, sort } = aqp(qs);
-    delete filter.page;
-    delete filter.limit;
+    delete filter.current;
+    delete filter.pageSize;
     const defaultLimit = 10;
     const currentLimit = +limit ? +limit : defaultLimit;
     const offset = (+page - 1) * currentLimit;
