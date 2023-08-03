@@ -17,6 +17,12 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: ['1'],
   });
+  // setting cors
+  app.enableCors({
+    origin: true,
+    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
+  });
   app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor(reflector));
