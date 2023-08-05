@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { IUser } from 'src/users/users.interface';
 import mongoose from 'mongoose';
 import aqp from 'api-query-params';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class JobsService {
@@ -16,6 +17,9 @@ export class JobsService {
   ) {}
 
   async create(createJobDto: CreateJobDto, userInfo: IUser) {
+    if (!dayjs(createJobDto.endDate).isAfter(createJobDto.startDate)) {
+      return 'End Date phải lớn hơn Start Date!';
+    }
     const job = await this.jobMode.create({
       ...createJobDto,
       createdBy: {
