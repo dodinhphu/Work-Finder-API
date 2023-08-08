@@ -14,6 +14,9 @@ export class Company {
   @Prop({ type: String })
   description: string;
 
+  @Prop({ type: String })
+  logo: string;
+
   @Prop({ type: Date })
   createdAt: Date;
 
