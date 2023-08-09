@@ -1,0 +1,6 @@
+export const enum EStatusCv {
+  PENDING = 'PENDING',
+  REVIEWING = 'REVIEWING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
