@@ -23,10 +23,10 @@ export class CreateJobDto {
   @IsNotEmpty({ message: 'Name Không Được Để Trống' })
   name: string;
 
-  @IsNotEmpty({ message: 'Skill Không Được Để Trống' })
-  @IsArray({ message: 'Skill có định dạng là Array' })
-  @IsString({ each: true, message: 'Skill có định dạng là string' })
-  skill: string[];
+  @IsNotEmpty({ message: 'skills Không Được Để Trống' })
+  @IsArray({ message: 'skills có định dạng là Array' })
+  @IsString({ each: true, message: 'skills có định dạng là string' })
+  skills: string[];
 
   @IsNotEmptyObject()
   @IsObject()

@@ -9,12 +9,13 @@ export class Job {
   name: string;
 
   @Prop({ type: Array })
-  skill: string[];
+  skills: string[];
 
   @Prop({ type: Object })
   company: {
     _id: mongoose.Schema.Types.ObjectId;
     name: string;
+    logo: string;
   };
 
   @Prop({ type: String })
@@ -34,10 +35,10 @@ export class Job {
 
   @Prop({ type: Date })
   startDate: Date;
-  
+
   @Prop({ type: Date })
   endDate: Date;
-  
+
   @Prop({ type: Boolean })
   isActive: boolean;
 

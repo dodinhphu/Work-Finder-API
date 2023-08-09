@@ -6,7 +6,7 @@ import {
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import path, { join } from 'path';
-import { FileSize, RegexTypeFile } from './file.constant.i';
+import { RegexTypeFile } from './file.constant.i';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
@@ -15,8 +15,9 @@ export class MulterConfigService implements MulterOptionsFactory {
       storage: diskStorage({
         destination: (req, file, cb) => {
           const folder = req?.headers?.folder_type ?? 'default';
-          this.ensureExists(`public/files/${folder}`);
-          cb(null, join(this.getRootPath(), `public/files/${folder}`));
+          const folderImg = `public/images/${folder}`;
+          this.ensureExists(folderImg);
+          cb(null, join(this.getRootPath(), folderImg));
         },
         filename: (req, file, cb) => {
           //get image extension
